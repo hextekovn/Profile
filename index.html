@@ -523,7 +523,9 @@
             
             element.addEventListener('mouseup', function() {
                 // Reset nếu không phải là project item đang được giữ
-                if (!element.classList.contains('project-item-tilt') || activeTiltElement !== element) {
+                if (element.classList.contains('project-item-tilt')) {
+                    // Logic reset của project item được quản lý bởi logic click/mousedown riêng
+                } else {
                     this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
                 }
             });
@@ -605,9 +607,17 @@
 
 
         // ----------------------------------------------------
-        // LÔ GIC ĐẶC BIỆT CHO CARD PROFILE CHÍNH
-        // ĐÃ XÓA logic mousemove/mouseleave khỏi .profile-card
+        // LÔ GIC ĐẶC BIỆT CHO CARD PROFILE CHÍNH (GIỮ LẠI HIỆU ỨNG NGHIÊNG THEO CHUỘT)
         // ----------------------------------------------------
+
+        const profileCard = document.querySelector('.profile-card');
+        profileCard.addEventListener('mousemove', function(e) {
+            handleMouseMove(this, e, 20, 1.01); // Giữ cường độ nghiêng trung bình cho card lớn
+        });
+        
+        profileCard.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        });
 
         // Thêm hiệu ứng cho toàn bộ trang khi load (giữ nguyên)
         document.addEventListener('DOMContentLoaded', function() {
