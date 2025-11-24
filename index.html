@@ -31,7 +31,7 @@
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             position: relative;
-            /* Đã loại bỏ perspective: 1000px; khỏi body */
+            perspective: 1000px;
         }
 
         /* Hiệu ứng nền động */
@@ -56,7 +56,7 @@
             text-shadow: 0 0 5px white, 0 0 20px var(--accent-color);
             transition: all 0.2s ease-in-out;
             position: relative;
-            /* Đã loại bỏ transform-style: preserve-3d; */
+            transform-style: preserve-3d;
         }
 
         .glitch-text:hover {
@@ -81,8 +81,8 @@
             transition: all 0.3s ease-in-out;
             position: relative;
             overflow: hidden;
-            /* Đã loại bỏ transform-style: preserve-3d; */
-            /* Đã loại bỏ transform ban đầu */
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(0) rotateY(0);
         }
 
         .profile-card::before {
@@ -121,7 +121,7 @@
             margin: 20px 0;
             position: relative;
             overflow: hidden;
-            /* Đã loại bỏ transform-style: preserve-3d; */
+            transform-style: preserve-3d;
         }
 
         .divider-red::after {
@@ -132,7 +132,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-            animation: shimmer 3s linear infinite;
+            animation: shimmer 3s infinite;
         }
 
         @keyframes shimmer {
@@ -162,8 +162,8 @@
             box-shadow: 0 0 5px rgba(255, 7, 58, 0.2);
             position: relative;
             overflow: hidden;
-            /* Đã loại bỏ transform-style: preserve-3d; */
-            /* Đã loại bỏ transform ban đầu */
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(0) rotateY(0) scale(1);
         }
 
         .contact-link::before {
@@ -188,8 +188,8 @@
         }
 
         .contact-link:active {
-            /* Giữ lại hiệu ứng nhấn cơ bản */
-            transform: scale(0.95); 
+            /* Giữ lại hiệu ứng nhấn cơ bản bằng CSS cho các phần tử này */
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(0.95); 
             transition: transform 0.1s ease;
         }
 
@@ -206,8 +206,7 @@
         .project-item {
             position: relative;
             overflow: hidden;
-            transition: all 0.1s ease;
-            /* Giữ lại transform-style: preserve-3d; chỉ cho project-item */
+            transition: all 0.1s ease; /* Giảm transition để JS quản lý mượt mà */
             transform-style: preserve-3d;
         }
 
@@ -247,8 +246,8 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            /* Đã loại bỏ transform-style: preserve-3d; */
-            /* Đã loại bỏ transform ban đầu */
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(0) rotateY(0);
         }
 
         .language-item::before {
@@ -271,8 +270,7 @@
         }
 
         .language-item:active {
-            /* Giữ lại hiệu ứng nhấn cơ bản */
-            transform: scale(0.98);
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg) translateZ(10px);
             transition: transform 0.1s ease;
         }
 
@@ -280,7 +278,7 @@
         .section-title {
             position: relative;
             display: inline-block;
-            /* Đã loại bỏ transform-style: preserve-3d; */
+            transform-style: preserve-3d;
         }
 
         .section-title::after {
@@ -355,51 +353,55 @@
             animation: fadeIn 1s ease-out;
         }
 
-        /* Đã XÓA style .tilt-element để loại bỏ hiệu ứng 3D mặc định */
+        /* Hiệu ứng 3D cho toàn bộ card khi di chuột */
+        .tilt-element {
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-        <div class="profile-card w-full max-w-4xl p-8 rounded-lg">
+    <div class="profile-card w-full max-w-4xl p-8 rounded-lg tilt-element">
         <header class="text-center mb-10">
-                        <div class="text-xs text-red-accent font-mono mb-2 header-subtitle">// HACKING INTO THE FUTURE //</div>
-            <h1 class="text-5xl md:text-7xl font-extrabold glitch-text">HEXTEKO</h1>
-            <p class="text-xl md:text-2xl font-light mt-2 tracking-widest text-red-accent">
+            <div class="text-xs text-red-accent font-mono mb-2 header-subtitle">// HACKING INTO THE FUTURE //</div>
+            <h1 class="text-5xl md:text-7xl font-extrabold glitch-text tilt-element">HEXTEKO</h1>
+            <p class="text-xl md:text-2xl font-light mt-2 tracking-widest text-red-accent tilt-element">
                 CYBER DEFENSE & OFFENSE SPECIALIST
             </p>
         </header>
 
-                <div class="divider-red"></div>
+        <div class="divider-red tilt-element"></div>
 
         <section class="mb-10">
-                        <h2 class="text-3xl font-semibold mb-6 flex items-center section-title">
+            <h2 class="text-3xl font-semibold mb-6 flex items-center section-title tilt-element">
                 <i data-lucide="shield-check" class="w-6 h-6 mr-3 text-red-accent"></i>
                 <span class="text-red-accent">TỔNG QUAN HEXTEKO</span>
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-lg">
                 <div class="col-span-1 md:col-span-2">
-                                        <p class="mb-4">
+                    <p class="mb-4 tilt-element">
                         Tôi là HEXTEKO, một chuyên gia An ninh mạng với trọng tâm công việc là phát triển các giải pháp phần mềm cấp thấp và công cụ tấn công/phòng thủ.
                     </p>
-                                        <p>
+                    <p class="tilt-element">
                         Sở thích của tôi là đi sâu vào các hệ thống để tìm kiếm lỗ hổng và xây dựng các công cụ tùy chỉnh (custom tools) nhằm tự động hóa quy trình phân tích và khai thác mã độc (malware).
                     </p>
                 </div>
                 <div class="col-span-1">
-                                        <h3 class="text-xl font-medium mb-3 text-red-accent border-b border-red-accent/50 pb-1 section-title">
+                    <h3 class="text-xl font-medium mb-3 text-red-accent border-b border-red-accent/50 pb-1 section-title tilt-element">
                         Ngôn ngữ cốt lõi
                     </h3>
                     <ul class="list-none space-y-2 font-mono text-sm">
-                                                <li class="language-item flex items-center p-2 rounded">
+                        <li class="language-item flex items-center p-2 rounded tilt-element">
                             <i data-lucide="code" class="w-4 h-4 mr-2 text-red-accent"></i> C# (Panel/Cheat)
                         </li>
-                                                <li class="language-item flex items-center p-2 rounded">
+                        <li class="language-item flex items-center p-2 rounded tilt-element">
                             <i data-lucide="code" class="w-4 h-4 mr-2 text-red-accent"></i> Python (Malware/Tool)
                         </li>
-                                                <li class="language-item flex items-center p-2 rounded">
+                        <li class="language-item flex items-center p-2 rounded tilt-element">
                             <i data-lucide="code" class="w-4 h-4 mr-2 text-red-accent"></i> JavaScript (DDoS/API/Tool)
                         </li>
-                                                <li class="language-item flex items-center p-2 rounded">
+                        <li class="language-item flex items-center p-2 rounded tilt-element">
                             <i data-lucide="code" class="w-4 h-4 mr-2 text-red-accent"></i> HTML/CSS/JSON (Website)
                         </li>
                     </ul>
@@ -407,37 +409,37 @@
             </div>
         </section>
 
-                <div class="divider-red"></div>
+        <div class="divider-red tilt-element"></div>
 
         <section class="mb-10">
-                        <h2 class="text-3xl font-semibold mb-6 flex items-center section-title">
+            <h2 class="text-3xl font-semibold mb-6 flex items-center section-title tilt-element">
                 <i data-lucide="cog" class="w-6 h-6 mr-3 text-red-accent"></i>
                 <span class="text-red-accent">DỰ ÁN TRỌNG TÂM</span>
             </h2>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 project-item-tilt">
+                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 tilt-element project-item-tilt">
                     <i data-lucide="wrench" class="w-6 h-6 mb-2 text-red-accent"></i>
                     <h3 class="font-bold text-xl mb-1">Custom Tools</h3>
                     <p class="text-sm text-gray-400">
                         Phát triển các tiện ích CLI (Command Line Interface) hiệu năng cao cho việc phân tích lưu lượng và tối ưu hoá quá trình. (Python)
                     </p>
                 </div>
-                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 project-item-tilt">
+                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 tilt-element project-item-tilt">
                     <i data-lucide="bug" class="w-6 h-6 mb-2 text-red-accent"></i>
                     <h3 class="font-bold text-xl mb-1">Malware Analysis</h3>
                     <p class="text-sm text-gray-400">
                         Xây dựng môi trường sandbox và các trình mô phỏng hành vi mã độc để nghiên cứu các mối đe dọa. (Python)
                     </p>
                 </div>
-                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 project-item-tilt">
+                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 tilt-element project-item-tilt">
                     <i data-lucide="layers" class="w-6 h-6 mb-2 text-red-accent"></i>
                     <h3 class="font-bold text-xl mb-1">Secured Apps</h3>
                     <p class="text-sm text-gray-400">
                         Thiết kế và triển khai các ứng dụng (desktop/mobile) với các lớp bảo mật nâng cao và mã hóa end-to-end.
                     </p>
                 </div>
-                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 project-item-tilt">
+                <div class="project-item p-4 rounded-md border border-red-accent/50 hover:bg-red-accent/10 transition-all duration-300 tilt-element project-item-tilt">
                     <i data-lucide="monitor" class="w-6 h-6 mb-2 text-red-accent"></i>
                     <h3 class="font-bold text-xl mb-1">Web Penetration</h3>
                     <p class="text-sm text-gray-400">
@@ -447,34 +449,34 @@
             </div>
         </section>
 
-                <div class="divider-red"></div>
+        <div class="divider-red tilt-element"></div>
 
         <footer class="text-center pt-4">
-                        <h3 class="text-3xl font-semibold mb-6 text-red-accent section-title">KẾT NỐI VỚI TÔI</h3>
+            <h3 class="text-3xl font-semibold mb-6 text-red-accent section-title tilt-element">KẾT NỐI VỚI TÔI</h3>
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                                <a href="https://github.com/YourUsername" target="_blank" class="contact-link" title="Github">
+                <a href="https://github.com/YourUsername" target="_blank" class="contact-link tilt-element" title="Github">
                     <i class="fab fa-github"></i>
                     <span>Github</span>
                 </a>
 
-                                <a href="https://facebook.com/YourProfile" target="_blank" class="contact-link" title="Facebook">
+                <a href="https://facebook.com/YourProfile" target="_blank" class="contact-link tilt-element" title="Facebook">
                     <i class="fab fa-facebook-f"></i>
                     <span>Facebook</span>
                 </a>
 
-                                <a href="https://zalo.me/YourZaloNumber" target="_blank" class="contact-link" title="Zalo">
+                <a href="https://zalo.me/YourZaloNumber" target="_blank" class="contact-link tilt-element" title="Zalo">
                     <i class="fas fa-comment-dots"></i>
                     <span>Zalo Chat</span>
                 </a>
 
-                                <a href="https://discordapp.com/users/YourDiscordID" target="_blank" class="contact-link" title="Discord">
+                <a href="https://discordapp.com/users/YourDiscordID" target="_blank" class="contact-link tilt-element" title="Discord">
                     <i class="fab fa-discord"></i>
                     <span>Discord</span>
                 </a>
             </div>
 
-                        <p class="mt-12 text-xs text-gray-500 font-mono copyright">
+            <p class="mt-12 text-xs text-gray-500 font-mono copyright tilt-element">
                 &copy; 2025 HEXTEKO. Powered by HEXTEKO.
             </p>
         </footer>
@@ -509,6 +511,23 @@
             
             element.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(${scale})`;
         }
+
+        // Áp dụng hiệu ứng nhấn (Mousedown/Mouseup) cho TẤT CẢ các phần tử có class 'tilt-element'
+        document.querySelectorAll('.tilt-element').forEach(element => {
+            
+            // Chỉ áp dụng mousedown/mouseup (hiệu ứng nhấn/nhả)
+            element.addEventListener('mousedown', function() {
+                // Hiệu ứng nhấn nhẹ
+                this.style.transform = 'perspective(1000px) rotateX(2deg) rotateY(2deg) scale(0.99)';
+            });
+            
+            element.addEventListener('mouseup', function() {
+                // Reset nếu không phải là project item đang được giữ
+                if (!element.classList.contains('project-item-tilt') || activeTiltElement !== element) {
+                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                }
+            });
+        });
 
         // ----------------------------------------------------
         // LÔ GIC ĐẶC BIỆT CHO CÁC MỤC DỰ ÁN (PROJECT ITEMS)
@@ -552,13 +571,13 @@
                     this.style.transform = 'perspective(1000px) rotateX(5deg) rotateY(5deg) scale(0.98)';
                 }
 
-                // Ngăn chặn sự kiện lan truyền
+                // Ngăn chặn sự kiện lan truyền để tránh kích hoạt hiệu ứng mousedown/mouseup chung
                 e.stopPropagation(); 
             });
 
             // 4. Bỏ hiệu ứng khi nhả chuột (mouseup) - Không làm gì ở đây
             element.addEventListener('mouseup', function() {
-                 // Để trống
+                 // Để trống, logic giữ đã xử lý trong mousedown
             });
         });
 
@@ -586,7 +605,8 @@
 
 
         // ----------------------------------------------------
-        // Đã XÓA LÔ GIC CHO CARD PROFILE CHÍNH
+        // LÔ GIC ĐẶC BIỆT CHO CARD PROFILE CHÍNH
+        // ĐÃ XÓA logic mousemove/mouseleave khỏi .profile-card
         // ----------------------------------------------------
 
         // Thêm hiệu ứng cho toàn bộ trang khi load (giữ nguyên)
