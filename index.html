@@ -10,7 +10,7 @@
 
     <style>
         /*
-        Định nghĩa phong cách chính: Tông màu Đen và Đỏ Neon
+        Định nghĩa phong cách chính: Tông màu Đen (hoặc gần đen) và Đỏ tươi (hoặc đỏ neon)
         */
 
         :root {
@@ -24,7 +24,7 @@
             background-color: var(--primary-bg);
             color: var(--text-color);
             min-height: 100vh;
-            display: flex; /* Dùng để căn giữa Profile Card sau khi Loading Screen biến mất */
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -206,7 +206,7 @@
         .project-item {
             position: relative;
             overflow: hidden;
-            transition: all 0.1s ease; 
+            transition: all 0.1s ease; /* Giảm transition để JS quản lý mượt mà */
             transform-style: preserve-3d;
         }
 
@@ -358,69 +358,10 @@
             transform-style: preserve-3d;
             transition: transform 0.1s ease;
         }
-
-        /* ------------------------------------------- */
-        /* STYLE MÀN HÌNH TẢI & KHẮC PHỤC LỖI MOBILE */
-        /* ------------------------------------------- */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw; /* Đảm bảo phủ 100% chiều rộng viewport */
-            height: 100vh; /* Đảm bảo phủ 100% chiều cao viewport */
-            background-color: var(--primary-bg); 
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-            transition: opacity 1s ease-in-out;
-            pointer-events: all;
-        }
-
-        .progress-bar-container {
-            width: 80%;
-            max-width: 500px;
-            height: 8px;
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--accent-color);
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 4px;
-        }
-
-        #progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: var(--accent-color);
-            box-shadow: 0 0 5px var(--accent-color);
-            transition: width 0.02s linear; /* Điều chỉnh tốc độ chuyển động của thanh tiến độ */
-        }
-
-        .fade-out {
-            opacity: 0 !important;
-            pointer-events: none;
-        }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div id="loading-screen">
-        <div class="text-3xl md:text-5xl font-extrabold glitch-text">HEXTEKO</div>
-        <p class="text-lg md:text-xl font-light mt-4 tracking-widest text-red-accent">
-            // Đang Scan Anti-DDoS //
-        </p>
-        <p class="text-lg md:text-xl font-light mt-4 tracking-widest text-red-accent">
-            // Anti-DDoS by HEXTEKO //
-        </p>
-
-        <div class="progress-bar-container mt-8">
-            <div id="progress-bar"></div>
-        </div>
-        <p id="progress-text" class="text-red-accent mt-2 font-mono">0%</p>
-    </div>
     <div class="profile-card w-full max-w-4xl p-8 rounded-lg tilt-element">
         <header class="text-center mb-10">
             <div class="text-xs text-red-accent font-mono mb-2 header-subtitle">// HACKING INTO THE FUTURE //</div>
@@ -551,6 +492,10 @@
 
         /**
          * Hàm xử lý hiệu ứng nghiêng dựa trên vị trí con trỏ chuột.
+         * @param {HTMLElement} element - Phần tử HTML cần nghiêng.
+         * @param {MouseEvent} e - Sự kiện chuột.
+         * @param {number} intensity - Cường độ nghiêng (giá trị càng thấp, nghiêng càng mạnh).
+         * @param {number} scale - Độ phóng đại khi nghiêng.
          */
         function handleMouseMove(element, e, intensity = 25, scale = 1.02) {
             const rect = element.getBoundingClientRect();
@@ -561,8 +506,8 @@
             const centerY = rect.height / 2;
             
             // Tính góc nghiêng
-            const angleY = (x - centerX) / intensity; 
-            const angleX = (centerY - y) / intensity;
+            const angleY = (x - centerX) / intensity; // Quay quanh trục Y (nghiêng theo chiều ngang)
+            const angleX = (centerY - y) / intensity; // Quay quanh trục X (nghiêng theo chiều dọc)
             
             element.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(${scale})`;
         }
@@ -570,12 +515,17 @@
         // Áp dụng hiệu ứng nhấn (Mousedown/Mouseup) cho TẤT CẢ các phần tử có class 'tilt-element'
         document.querySelectorAll('.tilt-element').forEach(element => {
             
+            // Chỉ áp dụng mousedown/mouseup (hiệu ứng nhấn/nhả)
             element.addEventListener('mousedown', function() {
+                // Hiệu ứng nhấn nhẹ
                 this.style.transform = 'perspective(1000px) rotateX(2deg) rotateY(2deg) scale(0.99)';
             });
             
             element.addEventListener('mouseup', function() {
-                if (!element.classList.contains('project-item-tilt')) {
+                // Reset nếu không phải là project item đang được giữ
+                if (element.classList.contains('project-item-tilt')) {
+                    // Logic reset của project item được quản lý bởi logic click/mousedown riêng
+                } else {
                     this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
                 }
             });
@@ -588,13 +538,15 @@
         document.querySelectorAll('.project-item-tilt').forEach(element => {
             // 1. Hiệu ứng "di chuột tới đâu nghiêng theo tới đó" (mousemove)
             element.addEventListener('mousemove', function(e) {
+                // Chỉ thực hiện nghiêng mousemove nếu không có phần tử nào đang được nhấn
                 if (activeTiltElement === null) {
-                    handleMouseMove(this, e, 15, 1.03); 
+                    handleMouseMove(this, e, 15, 1.03); // Cường độ nghiêng MẠNH HƠN cho Project Item
                 }
             });
 
             // 2. Reset khi rời chuột (mouseleave)
             element.addEventListener('mouseleave', function() {
+                // Chỉ reset nếu nó không phải là phần tử đang được nhấn
                 if (activeTiltElement !== this) {
                     this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
                 }
@@ -602,29 +554,42 @@
 
             // 3. Hiệu ứng "ấn chỗ nào nghiêng chỗ đó" (mousedown) - Giữ hiệu ứng nghiêng
             element.addEventListener('mousedown', function(e) {
+                // Nếu đã có phần tử đang được giữ:
                 if (activeTiltElement) {
+                    // Nếu nhấn lại chính nó, thì bỏ giữ
                     if (activeTiltElement === this) {
                         activeTiltElement.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
                         activeTiltElement = null; 
                     } else {
+                        // Nếu nhấn vào mục khác, reset mục cũ và giữ mục mới
                         activeTiltElement.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
                         activeTiltElement = this;
+                        // Áp dụng nghiêng cứng khi nhấn xuống
                         this.style.transform = 'perspective(1000px) rotateX(5deg) rotateY(5deg) scale(0.98)';
                     }
                 } else {
+                    // Lần nhấn mới, áp dụng hiệu ứng nghiêng và giữ lại
                     activeTiltElement = this;
                     this.style.transform = 'perspective(1000px) rotateX(5deg) rotateY(5deg) scale(0.98)';
                 }
+
+                // Ngăn chặn sự kiện lan truyền để tránh kích hoạt hiệu ứng mousedown/mouseup chung
                 e.stopPropagation(); 
             });
 
+            // 4. Bỏ hiệu ứng khi nhả chuột (mouseup) - Không làm gì ở đây
+            element.addEventListener('mouseup', function() {
+                 // Để trống, logic giữ đã xử lý trong mousedown
+            });
         });
 
-        // 4. Logic click bất cứ đâu trên body để reset hiệu ứng nghiêng đang được giữ
+        // 5. Logic click bất cứ đâu trên body để reset hiệu ứng nghiêng đang được giữ
         document.body.addEventListener('click', function(e) {
+            // Kiểm tra xem click có nằm ngoài project-item-tilt không
             let currentElement = e.target;
             let isInsideProjectItem = false;
 
+            // Đi ngược lên cây DOM
             while(currentElement) {
                 if (currentElement.classList && currentElement.classList.contains('project-item-tilt')) {
                     isInsideProjectItem = true;
@@ -633,6 +598,7 @@
                 currentElement = currentElement.parentElement;
             }
 
+            // Nếu có phần tử đang được giữ và click nằm ngoài nó
             if (activeTiltElement && !isInsideProjectItem) {
                 activeTiltElement.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
                 activeTiltElement = null;
@@ -641,76 +607,44 @@
 
 
         // ----------------------------------------------------
-        // LÔ GIC CHO CARD PROFILE CHÍNH
+        // LÔ GIC ĐẶC BIỆT CHO CARD PROFILE CHÍNH (GIỮ LẠI HIỆU ỨNG NGHIÊNG THEO CHUỘT)
         // ----------------------------------------------------
 
         const profileCard = document.querySelector('.profile-card');
         profileCard.addEventListener('mousemove', function(e) {
-            handleMouseMove(this, e, 20, 1.01); 
+            handleMouseMove(this, e, 20, 1.01); // Giữ cường độ nghiêng trung bình cho card lớn
         });
         
         profileCard.addEventListener('mouseleave', function() {
             this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
         });
 
-
-        // ----------------------------------------------------
-        // LÔ GIC CHO MÀN HÌNH TẢI VÀ THANH TIẾN ĐỘ
-        // ----------------------------------------------------
+        // Thêm hiệu ứng cho toàn bộ trang khi load (giữ nguyên)
         document.addEventListener('DOMContentLoaded', function() {
-            const loadingScreen = document.getElementById('loading-screen');
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            let progress = 0;
-            const duration = 2500; // Tổng thời gian quét: 2.5 giây
-            const step = 100 / (duration / 20); // Tính toán bước tăng
+            // Khởi tạo Intersection Observer cho hiệu ứng scroll-in
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
 
-            const interval = setInterval(() => {
-                // Tăng tiến độ
-                progress += step;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    // Thêm một độ trễ ngắn để người dùng nhìn thấy 100%
-                    setTimeout(() => {
-                        loadingScreen.classList.add('fade-out'); // Ẩn màn hình tải
-                        initializeScrollEffects(); // Kích hoạt hiệu ứng fade-in cho nội dung chính
-                    }, 300); 
-                }
-
-                // Cập nhật giao diện
-                progressBar.style.width = `${progress}%`;
-                progressText.textContent = `${Math.floor(progress)}%`;
-
-            }, 20); // Cập nhật mỗi 20ms
-
-            // Hàm initializeScrollEffects (khởi tạo hiệu ứng fade-in cho các section)
-            function initializeScrollEffects() {
-                const observerOptions = {
-                    threshold: 0.1,
-                    rootMargin: '0px 0px -50px 0px'
-                };
-
-                const observer = new IntersectionObserver(function(entries) {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.style.opacity = 1;
-                            entry.target.style.transform = 'translateY(0)';
-                            observer.unobserve(entry.target); 
-                        }
-                    });
-                }, observerOptions);
-
-                // Áp dụng hiệu ứng fade-in ban đầu
-                document.querySelectorAll('.project-item, .language-item, .contact-link').forEach(el => {
-                    el.style.opacity = 0;
-                    el.style.transform = 'translateY(20px)';
-                    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    observer.observe(el);
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
                 });
-            }
+            }, observerOptions);
+
+            document.querySelectorAll('.project-item, .language-item, .contact-link').forEach(el => {
+                el.style.opacity = 0;
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
         });
     </script>
 </body>
 </html>
+
+
